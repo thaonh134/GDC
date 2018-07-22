@@ -58,12 +58,22 @@ namespace GDC.Controllers
 
                 var rs = new List<string>();
 
-                if (Item.TypeGen == "DB") rs = CodeGenModel.AutoGenDB(Item);
-                else if (Item.TypeGen == "Model") rs = CodeGenModel.AutoGenModel(Item);
-                else if (Item.TypeGen == "All")
+                if (Item.typegen == "db") rs = CodeGenModel.AutoGenDB(Item);
+                else if (Item.typegen == "querysearch") rs = CodeGenModel.AutoGenQuerySearch(Item);
+                else if (Item.typegen == "model") rs = CodeGenModel.AutoGenModel(Item);
+                else if (Item.typegen == "controller") rs = CodeGenModel.AutoGenControllter(Item);
+                else if (Item.typegen == "viewform") rs = CodeGenModel.AutoGenViewForm(Item);
+                else if (Item.typegen == "viewtree") rs = CodeGenModel.AutoGenViewTree(Item);
+                else if (Item.typegen == "all")
                 {
                     
-                    rs = ((List<string>)CodeGenModel.AutoGenDB(Item)).Concat(((List<string>)CodeGenModel.AutoGenModel(Item))).ToList();
+                    rs = ((List<string>)CodeGenModel.AutoGenDB(Item))
+                        .Concat((List<string>)CodeGenModel.AutoGenQuerySearch(Item))
+                        .Concat((List<string>)CodeGenModel.AutoGenModel(Item))
+                        .Concat((List<string>)CodeGenModel.AutoGenControllter(Item))
+                        .Concat((List<string>)CodeGenModel.AutoGenViewTree(Item))
+                        .Concat((List<string>)CodeGenModel.AutoGenViewForm(Item))
+                        .ToList();
                 }
                 return Json(rs);
 

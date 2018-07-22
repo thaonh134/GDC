@@ -11,7 +11,7 @@ namespace GDC.Models.AutoGenTemplate
         public static List<string> AutoGen(dynamic item)
         {
             string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/template");
-            string targetPath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/download");
+            string targetPath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/download/Model");
             var rs = new List<string>();
             rs.Add(GetGenFileBase(sourcePath, targetPath, ".Model.cs", item));
             rs.Add(GetGenFile(sourcePath, targetPath, ".Model.cs", item));
@@ -19,7 +19,7 @@ namespace GDC.Models.AutoGenTemplate
         }
         public static string GetGenFileBase(string sourcePath, string targetPath,string extFileName, dynamic item)
         {
-            string fileName = item.TableName+ "Base" + extFileName;
+            string fileName = item.tablename+ "Base" + extFileName;
             targetPath = Path.Combine(targetPath, "AutoGen");
             // Use Path class to manipulate file and directory paths.
             string sourceFile = Path.Combine(sourcePath, "Create_ModelBase.cs");
@@ -41,11 +41,11 @@ namespace GDC.Models.AutoGenTemplate
             {
                 fileContent = sr.ReadToEnd();
                 fileContent = fileContent
-                    .Replace("@=ProjectName=@", item.ProjectName.ToString())
-                    .Replace("@=NameSpace=@", item.NameSpace.ToString())
-                    .Replace("@=TableName=@", item.TableName.ToString())
-                    .Replace("@=Fields=@", GenDBFields(item.Fields))
-                    //.Replace("@=Pkeys=@", GenPKkeyField(item.Pkeys))
+                    .Replace("@=projectname=@", item.projectname.ToString())
+                    .Replace("@=namespacename=@", item.namespacename.ToString())
+                    .Replace("@=tablename=@", item.tablename.ToString())
+                    .Replace("@=fields=@", GenDBfields(item.fields))
+                    //.Replace("@=pkeys=@", GenPKkeyfield(item.pkeys))
                     ;
             }
             File.WriteAllText(destFile, fileContent);
@@ -53,7 +53,7 @@ namespace GDC.Models.AutoGenTemplate
         }
         public static string GetGenFile(string sourcePath, string targetPath, string extFileName, dynamic item)
         {
-            string fileName = item.TableName + extFileName;
+            string fileName = item.tablename + extFileName;
 
             // Use Path class to manipulate file and directory paths.
             string sourceFile = Path.Combine(sourcePath, "Create_Model.cs");
@@ -75,32 +75,34 @@ namespace GDC.Models.AutoGenTemplate
             {
                 fileContent = sr.ReadToEnd();
                 fileContent = fileContent
-                    .Replace("@=ProjectName=@", item.ProjectName.ToString())
-                    .Replace("@=NameSpace=@", item.NameSpace.ToString())
-                    .Replace("@=TableName=@", item.TableName.ToString());
+                    .Replace("@=projectname=@", item.projectname.ToString())
+                    .Replace("@=namespacename=@", item.namespacename.ToString())
+                    .Replace("@=tablename=@", item.tablename.ToString())
+                    .Replace("@=fields=@", GenCustomfields(item.fields));
             }
             File.WriteAllText(destFile, fileContent);
             return destFile;
         }
-        public static string GenDBFields(dynamic Fields)
+        #region GenDbFields
+        public static string GenDBfields(dynamic fields)
         {
             var rs = "";
-            if (Fields.Count == 0) return "";
-            foreach (var field in Fields)
+            if (fields.Count == 0) return "";
+            foreach (var field in fields)
             {
-                rs = rs + GenDBField(field);
+                rs = rs + GenDBfield(field);
             }
             //if (rs.Length > 0) rs = rs.Substring(rs.IndexOf(',') + 1);
             return rs;
         }
-        public static string GenDBField(dynamic Field)
+        public static string GenDBfield(dynamic field)
         {
-            string name = Field.name == null ? "" : Field.name.ToString();
-            string type = Field.type == null ? "" : Field.type.ToString();
-            //string inc = Field.inc == null ? "" : Field.inc.ToString();
-            //string key = Field.key == null ? "" : Field.key.ToString();
-            //string lgt = Field.lgt == null ? "" : Field.lgt.ToString();
-            //string isnull = Field.isnull == null ? "0" : Field.isnull.ToString();
+            string name = field.name == null ? "" : field.name.ToString();
+            string type = field.type == null ? "" : field.type.ToString();
+            //string inc = field.inc == null ? "" : field.inc.ToString();
+            //string key = field.key == null ? "" : field.key.ToString();
+            //string lgt = field.lgt == null ? "" : field.lgt.ToString();
+            //string isnull = field.isnull == null ? "0" : field.isnull.ToString();
 
             var outname = "[" + name + "]";
             var outtype = "[" + type + "]";
@@ -110,30 +112,60 @@ namespace GDC.Models.AutoGenTemplate
             //if (new List<string>(new string[] { "nvarchar", "varchar" }).Contains(type.ToString().ToLower())) outtype = outtype + " " + outlgt;
 
 
-            return System.Environment.NewLine + "public " + GetDefaultValue (type) + name + " "  + " { get; set; } ";
+            return System.Environment.NewLine + "public " + GetDefaultValue(type) + name + " " + " { get; set; } ";
 
         }
         public static string GetDefaultValue(string type)
         {
             if (type.ToLower() == "nvarchar" || type.ToLower() == "varchar") return " string ";
             else if (type.ToLower() == "datetime" || type.ToLower() == "date") return " DateTime ";
-            else if (type.ToLower() == "int"  ) return " int ";
+            else if (type.ToLower() == "int") return " int ";
             else if (type.ToLower() == "bit") return " bool ";
+            else if (type.ToLower() == "float") return " double ";
             //else if (type.ToLower() == "bit") return " bool ";
             else return "xxx";
         }
-        //public static string GenPKkeyField(dynamic Pkeys)
-        //{
-        //    var rs = "";
-        //    if (Pkeys.Count == 0) return "";
-        //    foreach (var pkey in Pkeys)
-        //    {
-        //        rs = rs + System.Environment.NewLine + "," + "[" + pkey.name.ToString() + "]";
-        //    }
-        //    if (rs.Length > 0) rs = rs.Substring(rs.IndexOf(',') + 1);
-        //    return rs;
+        #endregion
+
+        #region GenCustomField
+        public static string GenCustomfields(dynamic fields)
+        {
+            var rs = "";
+            if (fields.Count == 0) return "";
+            foreach (var field in fields)
+            {
+                rs = rs + GenCustomfield(field);
+            }
+            //if (rs.Length > 0) rs = rs.Substring(rs.IndexOf(',') + 1);
+            return rs;
+        }
+        public static string GenCustomfield(dynamic field)
+        {
+            string name = field.name == null ? "" : field.name.ToString();
+            string type = field.type == null ? "" : field.type.ToString();
+            //string inc = field.inc == null ? "" : field.inc.ToString();
+            //string key = field.key == null ? "" : field.key.ToString();
+            //string lgt = field.lgt == null ? "" : field.lgt.ToString();
+            //string isnull = field.isnull == null ? "0" : field.isnull.ToString();
+
+            var outname = "[" + name + "]";
+            var outtype = "[" + type + "]";
+            //var outlgt = "(" + lgt + ")";
+            //var ontisnull = isnull == "1" ? "NULL" : "NOT NULL";
+            //var outinc = inc == "1" ? "IDENTITY (1,1)" : "";
+            //if (new List<string>(new string[] { "nvarchar", "varchar" }).Contains(type.ToString().ToLower())) outtype = outtype + " " + outlgt;
 
 
-        //}
+            return GetDefaultValueCustomfield(name, type);
+
+        }
+        public static string GetDefaultValueCustomfield(string name,string type)
+        {
+            
+            if (type.ToLower() == "datetime" || type.ToLower() == "date") return System.Environment.NewLine + "[Ignore]" +  System.Environment.NewLine + "public string " + name+"_str "+  " { get; set; } ";
+            else return "";
+        }
+        #endregion
+
     }
 }

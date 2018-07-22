@@ -1,25 +1,26 @@
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[@=TableName=@]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)			
-drop table [dbo].[@=TableName=@]			
-GO			
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[@=tablename=@]') and objectproperty(id, N'isusertable') = 1)			
+drop table [dbo].[@=tablename=@]			
+go			
 			
-CREATE TABLE [dbo].[@=TableName=@] (
-	[Id] [int] IDENTITY(1,1) NOT NULL 
-	,[Code] [nvarchar](256) NOT NULL DEFAULT ('')
-	,[Name] [nvarchar](256) NOT NULL DEFAULT ('')
-	,@=Fields=@	
-	,[CreatedAt] [datetime] NOT null DEFAULT (GETDATE()) 		
-	,[CreatedBy] [int] null 		
-	,[UpdatedAt] [datetime] NOT null DEFAULT (GETDATE()) 		
-	,[UpdatedBy] [int] null		
-	,[TimeStamp] [timestamp] NOT NULL		
-) ON [PRIMARY]			
-GO			
+create table [dbo].[@=tablename=@] (
+	[entryid] [int] identity(1,1) not null 
+	,[entrycode] [nvarchar](256) not null default ('')
+	,[entryname] [nvarchar](256) not null default ('')
+	,@=fields=@	
+	,[isactive] [bit]  NULL  
+	,[createdat] [datetime] not null default (getdate()) 		
+	,[createdby] [int] null 		
+	,[updatedat] [datetime] not null default (getdate()) 		
+	,[updatedby] [int] null		
+	,[timestamp] [timestamp] not null		
+) on [primary]			
+go			
 			
-ALTER TABLE [dbo].[@=TableName=@] ADD			
-	CONSTRAINT [PK_@=TableName=@] PRIMARY KEY  CLUSTERED		
+alter table [@=tablename=@] add			
+	constraint [PK_@=tablename=@] primary key  clustered		
 	(		
-		[Id]
-		@=Pkeys=@	
+		[entryid]
+		@=pkeys=@	
 			
-	)  ON [PRIMARY]		
-GO			
+	)  on [primary]		
+go			

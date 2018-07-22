@@ -193,7 +193,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AutoGenTemplate\GenDB_CreateTable.cs" />
+    <Compile Include="Models\AutoGenTemplate\GenDB_QuerySelect.cs" />
+    <Compile Include="Models\AutoGenTemplate\GenFile_Controller.cs" />
     <Compile Include="Models\AutoGenTemplate\GenFile_Model.cs" />
+    <Compile Include="Models\AutoGenTemplate\GenFile_ViewForm.cs" />
+    <Compile Include="Models\AutoGenTemplate\GenFile_ViewTree.cs" />
     <Compile Include="Models\DynamicJsonResultModel.cs" />
     <Compile Include="Models\CodeGenModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

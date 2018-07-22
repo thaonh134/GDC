@@ -14,12 +14,12 @@ namespace GDC.Models.AutoGenTemplate
             string targetPath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/download/Db");
 
             var rs = new List<string>();
-            rs.Add(GetGenFile(sourcePath, targetPath, "_Table.sql", item));
+            rs.Add(GetGenFile(sourcePath, targetPath, "_CreateTable.sql", item));
             return rs;
         }
         public static string GetGenFile(string sourcePath, string targetPath, string extFileName, dynamic item)
         {
-            string fileName = item.TableName + extFileName;
+            string fileName = item.tablename + extFileName;
 
 
             // Use Path class to manipulate file and directory paths.
@@ -42,33 +42,33 @@ namespace GDC.Models.AutoGenTemplate
             {
                 fileContent = sr.ReadToEnd();
                 fileContent = fileContent
-                    .Replace("@=TableName=@", item.TableName.ToString())
-                    .Replace("@=Fields=@", GenDBFields(item.Fields))
-                    .Replace("@=Pkeys=@", GenPKkeyField(item.Pkeys));
+                    .Replace("@=tablename=@", item.tablename.ToString())
+                    .Replace("@=fields=@", GenDBfields(item.fields))
+                    .Replace("@=pkeys=@", GenPKkeyfield(item.pkeys));
             }
             File.WriteAllText(destFile, fileContent);
             return destFile;
         }
 
-        public static string GenDBFields(dynamic Fields)
+        public static string GenDBfields(dynamic fields)
         {
             var rs = "";
-            if (Fields.Count == 0) return "";
-            foreach (var field in Fields)
+            if (fields.Count == 0) return "";
+            foreach (var field in fields)
             {
-                rs = rs + GenDBField(field);
+                rs = rs + GenDBfield(field);
             }
             if (rs.Length > 0) rs = rs.Substring(rs.IndexOf(',') + 1);
             return rs;
         }
-        public static string GenDBField(dynamic Field)
+        public static string GenDBfield(dynamic field)
         {
-            string name = Field.name==null?"":Field.name.ToString();
-            string type = Field.type == null ? "" : Field.type.ToString();
-            string inc = Field.inc == null ? "" : Field.inc.ToString();
-            string key = Field.key == null ? "" : Field.key.ToString();
-            string lgt = Field.lgt == null ? "" : Field.lgt.ToString();
-            string isnull = Field.isnull == null ? "0" : Field.isnull.ToString();
+            string name = field.name==null?"":field.name.ToString();
+            string type = field.type == null ? "" : field.type.ToString();
+            string inc = field.inc == null ? "" : field.inc.ToString();
+            string key = field.key == null ? "" : field.key.ToString();
+            string lgt = field.lgt == null ? "" : field.lgt.ToString();
+            string isnull = field.isnull == null ? "0" : field.isnull.ToString();
 
             var outname = "[" + name + "]";
             var outtype = "[" + type + "]";
@@ -87,11 +87,11 @@ namespace GDC.Models.AutoGenTemplate
             else if (type.ToLower() == "datetime" || type.ToLower() == "date") return " DEFAULT (GETDATE())";
             else return " DEFAULT (0)";
         }
-        public static string GenPKkeyField(dynamic Pkeys)
+        public static string GenPKkeyfield(dynamic pkeys)
         {
             var rs = "";
-            if (Pkeys.Count == 0) return "";
-            foreach (var pkey in Pkeys)
+            if (pkeys.Count == 0) return "";
+            foreach (var pkey in pkeys)
             {
                 rs = rs +  System.Environment.NewLine + "," + "[" + pkey.name.ToString() + "]" ;
             }

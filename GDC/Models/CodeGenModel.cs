@@ -14,11 +14,32 @@ namespace GDC.Models
           
             return GenDB_CreateTableModel.AutoGen(item);
         }
+        public static List<string> AutoGenQuerySearch(dynamic item)
+        {
+
+            return GenDB_QuerySelect.AutoGen(item);
+        }
         public static List<string> AutoGenModel(dynamic item)
         {
 
             return GenFile_Model.AutoGen(item);
         }
+        public static List<string> AutoGenControllter(dynamic item)
+        {
+
+            return GenFile_Controller.AutoGen(item);
+        }
+        public static List<string> AutoGenViewTree(dynamic item)
+        {
+
+            return GenFile_ViewTree.AutoGen(item);
+        }
+        public static List<string> AutoGenViewForm(dynamic item)
+        {
+
+            return GenFile_ViewForm.AutoGen(item);
+        }
+
     }
 
 }
