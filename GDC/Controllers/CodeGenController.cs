@@ -57,7 +57,8 @@ namespace GDC.Controllers
                 #endregion
 
                 var rs = new List<string>();
-
+                //set project name
+                Item.projectname = "SSKD";
                 if (Item.typegen == "db") rs = CodeGenModel.AutoGenDB(Item);
                 else if (Item.typegen == "querysearch") rs = CodeGenModel.AutoGenQuerySearch(Item);
                 else if (Item.typegen == "model") rs = CodeGenModel.AutoGenModel(Item);

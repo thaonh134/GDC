@@ -1,5 +1,5 @@
-using ananlips.Areas.Admin.Models;
-using ananlips.Service;
+using SSKD.Areas.Admin.Models;
+using SSKD.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using ServiceStack.DataAnnotations;
@@ -10,23 +10,16 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 /*AutoGen: ThaoNH*/
-namespace ananlips.Areas.Admin.Models.AutoGen
+namespace SSKD.Areas.Admin.Models.AutoGen
 {
-	public abstract  class AuthMenuBase<T> where T : AuthMenuBase<T>
+	public abstract  class CategoryBase<T> where T : CategoryBase<T>
     {
 	 [PrimaryKey]
     [AutoIncrement]
         public int entryid { get; set; }
         public string entrycode { get; set; }
         public string entryname { get; set; }
-        
-public  string entrynamevi  { get; set; } 
-public  string areasname  { get; set; } 
-public  string menuid  { get; set; } 
-public  string parentmenuid  { get; set; } 
-public  int menuindex  { get; set; } 
-public  string controllername  { get; set; } 
-public  string icon  { get; set; } 	
+        	
         public bool isactive { get; set; }
         public DateTime createdat { get; set; }
         public int createdby { get; set; }
@@ -43,7 +36,7 @@ public  string icon  { get; set; }
             param.Add(new SqlParameter("@curruserid", curruserid));
              param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
 
-            var data = new SqlHelper().ExecuteQuery("p_AuthMenu_Search", param);
+            var data = new SqlHelper().ExecuteQuery("p_Category_Search", param);
             request.Page = 1;
             request.Filters = null;
             var result = data.ToDataSourceResult(request);
@@ -60,11 +53,11 @@ public  string icon  { get; set; }
             param.Add(new SqlParameter("@status", status));
             param.Add(new SqlParameter("@curruserid", curruserid));
             param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
-    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_AuthMenu_Search", param));
+    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_Category_Search", param));
         }
-public static T GetById(int entryid)
+public static T GetById(int entryid, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.GetByIdOrDefault<T>(entryid);
@@ -74,11 +67,11 @@ public static T GetById(int entryid)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
-public static T GetByCode(string entrycode)
+public static T GetByCode(string entrycode, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.FirstOrDefault<T>("entrycode={0}", entrycode);
@@ -88,7 +81,7 @@ public static T GetByCode(string entrycode)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
 }
 }

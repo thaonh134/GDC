@@ -1,5 +1,5 @@
-using ananlips.Areas.Admin.Models.AutoGen;
-using ananlips.Service;
+using SSKD.Areas.Admin.Models.AutoGen;
+using SSKD.Service;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,19 +9,18 @@ using System.Linq;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using ServiceStack.DataAnnotations;
-namespace ananlips.Areas.Admin.Models
+namespace SSKD.Areas.Admin.Models
 {
-    public class Product: ProductBase<Product>
+    public class AuthMenu: AuthMenuBase<AuthMenu>
     {
       	
 		#region AutoGen
-public int AddOrUpdate(int curruserid)
+public int AddOrUpdate(int curruserid, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
-        //var isexist = dbConn.FirstOrDefault <Product>(this.entryid);
-        var isexist = dbConn.GetByIdOrDefault <Product> (this.entryid);
+        var isexist = dbConn.GetByIdOrDefault <AuthMenu> (this.entryid);
         if (isexist == null)
         {
 
@@ -30,9 +29,9 @@ public int AddOrUpdate(int curruserid)
             this.createdby = curruserid;
             this.updatedat = DateTime.Now;
             this.updatedby = curruserid;
-            dbConn.Insert<Product>(this);
+            dbConn.Insert<AuthMenu>(this);
             long lastInsertId = dbConn.GetLastInsertId();
-            dbConn.Close();
+            if (!isTrans) dbConn.Close();
             this.entryid = Convert.ToInt32(lastInsertId);
             return this.entryid;
         }
@@ -43,16 +42,26 @@ public int AddOrUpdate(int curruserid)
             this.createdby = isexist.createdby;
             this.updatedat = DateTime.Now;
             this.updatedby = curruserid;
-            dbConn.Update<Product>(this);
-            dbConn.Close();
+            dbConn.Update<AuthMenu>(this);
+            if (!isTrans) dbConn.Close();
             return this.entryid;
         }
         else
+        {
+            if (!isTrans) dbConn.Close();
             return 0;
+        }
+          
     }
     catch (Exception ex)
     {
-        return 0;
+        if (!isTrans)
+        {
+            dbConn.Close();
+            return 0;
+        }
+
+        throw new System.ArgumentException("data error", ex);
     }
 }
 #endregion

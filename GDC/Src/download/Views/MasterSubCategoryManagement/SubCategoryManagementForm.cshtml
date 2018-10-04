@@ -1,5 +1,5 @@
-@using ananlips.Areas.Admin.Models;
-@using ananlips.Resources;
+@using SSKD.Areas.Admin.Models;
+@using SSKD.Resources;
 
 @{
     var dict = Model != null ? (Dictionary<string, object>)Model : new Dictionary<string, object>();
@@ -144,7 +144,7 @@
     //Update
     function edit(obj) {
         blockUIFromUser(true);
-        $.post(r + "/AdminSubCategoryManagement/GetByID", { entryid: obj.entryid }, function (data) {
+        $.post(r + "/MasterSubCategoryManagement/GetByID", { entryid: obj.entryid }, function (data) {
             if (data.success) {
                 var value = data.data;
 

@@ -18,7 +18,6 @@ create table [dbo].[AuthMenu] (
 	,[createdby] [int] null 		
 	,[updatedat] [datetime] not null default (getdate()) 		
 	,[updatedby] [int] null		
-	,[timestamp] [timestamp] not null		
 ) on [primary]			
 go			
 			

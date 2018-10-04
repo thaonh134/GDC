@@ -16,6 +16,7 @@ create table [dbo].[Product] (
  ,[priceamount] [float]  NULL  
  ,[brand] [nvarchar] (256)  NULL  
  ,[origin] [nvarchar] (256)  NULL  
+ ,[contents] [nvarchar] (256)  NULL  
  ,[unit] [nvarchar] (256)  NULL  
  ,[unitquantity] [float]  NULL  
  ,[viewcount] [int]  NULL  
@@ -26,7 +27,6 @@ create table [dbo].[Product] (
 	,[createdby] [int] null 		
 	,[updatedat] [datetime] not null default (getdate()) 		
 	,[updatedby] [int] null		
-	,[timestamp] [timestamp] not null		
 ) on [primary]			
 go			
 			

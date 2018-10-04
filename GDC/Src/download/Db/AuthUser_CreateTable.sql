@@ -17,13 +17,13 @@ create table [dbo].[AuthUser] (
  ,[comments] [nvarchar] (max)  NULL  
  ,[roleid] [int]  NULL  
  ,[loginprovider] [nvarchar] (256)  NULL  
+ ,[logintype] [int]  NULL  
  ,[lastlogin] [date]  NULL  	
 	,[isactive] [bit]  NULL  
 	,[createdat] [datetime] not null default (getdate()) 		
 	,[createdby] [int] null 		
 	,[updatedat] [datetime] not null default (getdate()) 		
 	,[updatedby] [int] null		
-	,[timestamp] [timestamp] not null		
 ) on [primary]			
 go			
 			

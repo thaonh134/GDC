@@ -11,7 +11,7 @@ namespace GDC.Models.AutoGenTemplate
         public static List<string> AutoGen(dynamic item)
         {
             string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/template");
-            string targetPath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/download/Model");
+            string targetPath = System.Web.Hosting.HostingEnvironment.MapPath(@"~/Src/download/Models");
             var rs = new List<string>();
             rs.Add(GetGenFileBase(sourcePath, targetPath, ".Model.cs", item));
             rs.Add(GetGenFile(sourcePath, targetPath, ".Model.cs", item));

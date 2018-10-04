@@ -1,6 +1,6 @@
-using ananlips.Areas.Admin.Models;
-using ananlips.Resources;
-using ananlips.Service;
+using SSKD.Areas.Admin.Models;
+using SSKD.Resources;
+using SSKD.Service;
 using Kendo.Mvc.UI;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Web.Mvc;
 using ServiceStack.OrmLite;
 using System.Text;
 
-namespace ananlips.Areas.Admin.Controllers
+namespace SSKD.Areas.Admin.Controllers
 {
     public class MasterCategoryManagementController : CustomController
     {
@@ -60,8 +60,6 @@ namespace ananlips.Areas.Admin.Controllers
             IDbConnection dbConn = new OrmliteConnection().openConn();
             var dict = new Dictionary<string, object>();
             dict["activestatus"] = CustomModel.GetActiveStatus();
-
-            dict["ddl_article_type"] = CustomModel.GetActiveStatus();
             dbConn.Close();
 
             //set parameter
@@ -81,7 +79,7 @@ namespace ananlips.Areas.Admin.Controllers
             try
             {
                 if (string.IsNullOrEmpty(item.entryname) || string.IsNullOrEmpty(item.entrycode)) return Json(new { success = false, message = tw_Lang.Common_ActionResult_MissingInfo });
-                var isExist = Category.GetById(item.entryid) ;
+                var isExist = Category.GetById(item.entryid, null, false) ;
 
                 //Validate
 
@@ -104,7 +102,7 @@ namespace ananlips.Areas.Admin.Controllers
                     item.updatedby = currentUser.entryid;
 
                 }
-                item.AddOrUpdate(currentUser.entryid);
+                item.AddOrUpdate(currentUser.entryid, null, false);
                 return Json(new { success = true, data = item });
 
             }
@@ -123,7 +121,7 @@ namespace ananlips.Areas.Admin.Controllers
             IDbConnection db = new OrmliteConnection().openConn();
             try
             {
-                var isExist =Category.GetById(entryid);
+                var isExist =Category.GetById(entryid, null, false);
                 isExist.isactive = isactive;
                 isExist.updatedby = currentUser.entryid;
                 isExist.updatedat = DateTime.Now;
@@ -151,7 +149,7 @@ namespace ananlips.Areas.Admin.Controllers
             IDbConnection dbConn = new OrmliteConnection().openConn();
             try
             {
-                var data =Category.GetById(entryid);
+                var data =Category.GetById(entryid, null, false);
                 var ref_Roles = CustomModel.GetActiveStatus(); 
                 return Json(new
                 {

@@ -60,8 +60,6 @@ namespace @=projectname=@.@=namespacename=@.Controllers
             IDbConnection dbConn = new OrmliteConnection().openConn();
             var dict = new Dictionary<string, object>();
             dict["activestatus"] = CustomModel.GetActiveStatus();
-
-            dict["ddl_article_type"] = CustomModel.GetActiveStatus();
             dbConn.Close();
 
             //set parameter
@@ -81,7 +79,7 @@ namespace @=projectname=@.@=namespacename=@.Controllers
             try
             {
                 if (string.IsNullOrEmpty(item.entryname) || string.IsNullOrEmpty(item.entrycode)) return Json(new { success = false, message = tw_Lang.Common_ActionResult_MissingInfo });
-                var isExist = @=tablename=@.GetById(item.entryid) ;
+                var isExist = @=tablename=@.GetById(item.entryid, null, false) ;
 
                 //Validate
 
@@ -104,7 +102,7 @@ namespace @=projectname=@.@=namespacename=@.Controllers
                     item.updatedby = currentUser.entryid;
 
                 }
-                item.AddOrUpdate(currentUser.entryid);
+                item.AddOrUpdate(currentUser.entryid, null, false);
                 return Json(new { success = true, data = item });
 
             }
@@ -123,7 +121,7 @@ namespace @=projectname=@.@=namespacename=@.Controllers
             IDbConnection db = new OrmliteConnection().openConn();
             try
             {
-                var isExist =@=tablename=@.GetById(entryid);
+                var isExist =@=tablename=@.GetById(entryid, null, false);
                 isExist.isactive = isactive;
                 isExist.updatedby = currentUser.entryid;
                 isExist.updatedat = DateTime.Now;
@@ -151,7 +149,7 @@ namespace @=projectname=@.@=namespacename=@.Controllers
             IDbConnection dbConn = new OrmliteConnection().openConn();
             try
             {
-                var data =@=tablename=@.GetById(entryid);
+                var data =@=tablename=@.GetById(entryid, null, false);
                 var ref_Roles = CustomModel.GetActiveStatus(); 
                 return Json(new
                 {

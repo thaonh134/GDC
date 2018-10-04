@@ -1,5 +1,5 @@
-using ananlips.Areas.Admin.Models;
-using ananlips.Service;
+using SSKD.Areas.Admin.Models;
+using SSKD.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using ServiceStack.DataAnnotations;
@@ -10,9 +10,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 /*AutoGen: ThaoNH*/
-namespace ananlips.Areas.Admin.Models.AutoGen
+namespace SSKD.Areas.Admin.Models.AutoGen
 {
-	public abstract  class AuthUserBase<T> where T : AuthUserBase<T>
+	public abstract  class ProductBase<T> where T : ProductBase<T>
     {
 	 [PrimaryKey]
     [AutoIncrement]
@@ -20,18 +20,22 @@ namespace ananlips.Areas.Admin.Models.AutoGen
         public string entrycode { get; set; }
         public string entryname { get; set; }
         
-public  string fullname  { get; set; } 
-public  string password  { get; set; } 
-public  string visiblepassword  { get; set; } 
-public  string avatarpath  { get; set; } 
-public  string phone  { get; set; } 
-public  string email  { get; set; } 
-public  string address  { get; set; } 
-public  DateTime birthday  { get; set; } 
-public  string comments  { get; set; } 
-public  int roleid  { get; set; } 
-public  string loginprovider  { get; set; } 
-public  DateTime lastlogin  { get; set; } 	
+public  string entrynamevi  { get; set; } 
+public  int subcategoryid  { get; set; } 
+public  int categoryid  { get; set; } 
+public  string defautlimg  { get; set; } 
+public  string listimgs  { get; set; } 
+public  double price  { get; set; } 
+public  double discount  { get; set; } 
+public  double priceamount  { get; set; } 
+public  string brand  { get; set; } 
+public  string origin  { get; set; } 
+public  string contents  { get; set; } 
+public  string unit  { get; set; } 
+public  double unitquantity  { get; set; } 
+public  int viewcount  { get; set; } 
+public  int sellcount  { get; set; } 
+public  string comments  { get; set; } 	
         public bool isactive { get; set; }
         public DateTime createdat { get; set; }
         public int createdby { get; set; }
@@ -48,7 +52,7 @@ public  DateTime lastlogin  { get; set; }
             param.Add(new SqlParameter("@curruserid", curruserid));
              param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
 
-            var data = new SqlHelper().ExecuteQuery("p_AuthUser_Search", param);
+            var data = new SqlHelper().ExecuteQuery("p_Product_Search", param);
             request.Page = 1;
             request.Filters = null;
             var result = data.ToDataSourceResult(request);
@@ -65,11 +69,11 @@ public  DateTime lastlogin  { get; set; }
             param.Add(new SqlParameter("@status", status));
             param.Add(new SqlParameter("@curruserid", curruserid));
             param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
-    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_AuthUser_Search", param));
+    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_Product_Search", param));
         }
-public static T GetById(int entryid)
+public static T GetById(int entryid, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.GetByIdOrDefault<T>(entryid);
@@ -79,11 +83,11 @@ public static T GetById(int entryid)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
-public static T GetByCode(string entrycode)
+public static T GetByCode(string entrycode, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.FirstOrDefault<T>("entrycode={0}", entrycode);
@@ -93,7 +97,7 @@ public static T GetByCode(string entrycode)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
 }
 }

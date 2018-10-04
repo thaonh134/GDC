@@ -6,12 +6,12 @@ create table [dbo].[Category] (
 	[entryid] [int] identity(1,1) not null 
 	,[entrycode] [nvarchar](256) not null default ('')
 	,[entryname] [nvarchar](256) not null default ('')
+	,	
 	,[isactive] [bit]  NULL  
 	,[createdat] [datetime] not null default (getdate()) 		
 	,[createdby] [int] null 		
 	,[updatedat] [datetime] not null default (getdate()) 		
 	,[updatedby] [int] null		
-	,[timestamp] [timestamp] not null		
 ) on [primary]			
 go			
 			

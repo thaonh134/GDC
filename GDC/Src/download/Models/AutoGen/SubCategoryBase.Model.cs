@@ -1,5 +1,5 @@
-using ananlips.Areas.Admin.Models;
-using ananlips.Service;
+using SSKD.Areas.Admin.Models;
+using SSKD.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using ServiceStack.DataAnnotations;
@@ -10,9 +10,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 /*AutoGen: ThaoNH*/
-namespace ananlips.Areas.Admin.Models.AutoGen
+namespace SSKD.Areas.Admin.Models.AutoGen
 {
-	public abstract  class BillBase<T> where T : BillBase<T>
+	public abstract  class SubCategoryBase<T> where T : SubCategoryBase<T>
     {
 	 [PrimaryKey]
     [AutoIncrement]
@@ -20,10 +20,7 @@ namespace ananlips.Areas.Admin.Models.AutoGen
         public string entrycode { get; set; }
         public string entryname { get; set; }
         
-public  int userid  { get; set; } 
-public  int deliveryid  { get; set; } 
-public  int quantity  { get; set; } 
-public  double priceamount  { get; set; } 	
+public  int categoryid  { get; set; } 	
         public bool isactive { get; set; }
         public DateTime createdat { get; set; }
         public int createdby { get; set; }
@@ -40,7 +37,7 @@ public  double priceamount  { get; set; }
             param.Add(new SqlParameter("@curruserid", curruserid));
              param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
 
-            var data = new SqlHelper().ExecuteQuery("p_Bill_Search", param);
+            var data = new SqlHelper().ExecuteQuery("p_SubCategory_Search", param);
             request.Page = 1;
             request.Filters = null;
             var result = data.ToDataSourceResult(request);
@@ -57,11 +54,11 @@ public  double priceamount  { get; set; }
             param.Add(new SqlParameter("@status", status));
             param.Add(new SqlParameter("@curruserid", curruserid));
             param.Add(new SqlParameter("@sort", CustomModel.GetSortStringFormRequest(request)));
-    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_Bill_Search", param));
+    return CustomModel.ConvertDataTable<T>(new SqlHelper().ExecuteQuery("p_SubCategory_Search", param));
         }
-public static T GetById(int entryid)
+public static T GetById(int entryid, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.GetByIdOrDefault<T>(entryid);
@@ -71,11 +68,11 @@ public static T GetById(int entryid)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
-public static T GetByCode(string entrycode)
+public static T GetByCode(string entrycode, IDbConnection dbConn, bool isTrans)
 {
-    IDbConnection dbConn = new OrmliteConnection().openConn();
+    if (dbConn == null) dbConn = new OrmliteConnection().openConn();
     try
     {
         var data = dbConn.FirstOrDefault<T>("entrycode={0}", entrycode);
@@ -85,7 +82,7 @@ public static T GetByCode(string entrycode)
     {
         return null;
     }
-    finally { dbConn.Close(); }
+    finally { if (!isTrans) dbConn.Close(); }
 }
 }
 }

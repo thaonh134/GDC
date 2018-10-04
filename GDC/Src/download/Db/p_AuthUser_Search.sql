@@ -9,13 +9,13 @@ IF OBJECT_ID(N'[dbo].[p_AuthUser_Search]') IS NOT NULL
 GO
 
 CREATE PROCEDURE [p_AuthUser_Search]	
-	@Page int = 1  
- ,@PageSize int = 100  
- ,@WhereCondition nvarchar(max) = ''  
- ,@Sort nvarchar(max) = ''  
- ,@Status varchar(32) = '1'  
- ,@CurrUserId int  = 0  
- ,@Language nvarchar(max) = 'vi'  
+	@page int = 1  
+ ,@pageSize int = 100  
+ ,@whereCondition nvarchar(max) = ''  
+ ,@sort nvarchar(max) = ''  
+ ,@status varchar(32) = '1'  
+ ,@currUserId int  = 0  
+ ,@language nvarchar(max) = 'vi'  
 AS
     IF OBJECT_ID('tempdb..#Result') IS NOT NULL
 	   DROP TABLE #Result
@@ -35,6 +35,7 @@ AS
  ,[comments]
  ,[roleid]
  ,[loginprovider]
+ ,[logintype]
  ,[lastlogin]	
     ,a.isactive  
     ,a.createdat  
